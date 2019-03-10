@@ -267,8 +267,8 @@ export default class ActionBlock extends React.Component<Props> {
               currentValue !== undefined
                 ? currentValue
                 : DefaultValue !== undefined
-                ? DefaultValue
-                : '';
+                  ? DefaultValue
+                  : '';
             return result;
           },
           {},
@@ -316,6 +316,8 @@ export default class ActionBlock extends React.Component<Props> {
     if (value.GroupingIdentifier && value.WFControlFlowMode) {
       let name;
       switch (value.WFControlFlowMode) {
+        case 0:
+          break;
         case 1:
           name =
             data.Name === 'Choose from Menu'
@@ -327,10 +329,12 @@ export default class ActionBlock extends React.Component<Props> {
             data.Name === 'Choose from Menu'
               ? 'Menu'
               : ['Repeat', 'Repeat with Each'].includes(data.Name)
-              ? 'Repeat'
-              : data.Name
+                ? 'Repeat'
+                : data.Name
           }`;
           break;
+        default:
+          throw new Error(`Invalid control flow mode ${value.controlFlowMode}`);
       }
 
       return (
@@ -428,9 +432,9 @@ export default class ActionBlock extends React.Component<Props> {
                           return WFParameterValues.map(relation)[
                             WFParameterRelation === '==' ? 'some' : 'every'
                           ](Boolean);
-                        } else {
-                          return relation(WFParameterValue);
-                        }
+                        } 
+                        return relation(WFParameterValue);
+                        
                       case 'WFWorkflowTypeResource':
                         switch (WFWorkflowType) {
                           case 'WatchKit':
@@ -501,8 +505,8 @@ export default class ActionBlock extends React.Component<Props> {
                       {Param.Label &&
                         !Param.Multiline &&
                         Param.Class !== 'WFContentArrayParameter' && (
-                          <label>{Param.Label}</label>
-                        )}
+                        <label>{Param.Label}</label>
+                      )}
                       {this.getParameterInput(Param, parameters[Param.Key])}
                     </div>
                   );
