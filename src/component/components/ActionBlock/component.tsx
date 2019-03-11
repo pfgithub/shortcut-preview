@@ -394,6 +394,7 @@ export default class ActionBlock extends React.Component<Props> {
           <div className={styles.header} 
             onClick={() => {
               if(!this.props.onInteract) {return;}
+              
               this.props.onInteract({type: 'action', actionData: fullValue});
             }}>
             <Icon name={icon} className={styles.icon} />
