@@ -173,10 +173,10 @@ export default class dataPreview extends React.Component<Props> {
               ? {
                 data: action.WFAction,
                 icon: action.icon,
-                value: WFAction.WFWorkflowActionParameters,
+                value: WFAction.WFWorkflowActionParameters
               }
               : {
-                missing: WFAction.WFWorkflowActionIdentifier,
+                missing: WFAction.WFWorkflowActionIdentifier
               };
 
             return (
@@ -186,6 +186,7 @@ export default class dataPreview extends React.Component<Props> {
                 getVariable={this.getVariable}
                 onVariable={this.addVariable}
                 debug={debug}
+                fullValue={WFAction}
                 onInteract={data => {
                   if(!this.props.onInteract) {return;}
                   this.props.onInteract(data);

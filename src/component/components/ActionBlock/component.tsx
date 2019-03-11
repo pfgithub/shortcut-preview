@@ -29,6 +29,7 @@ interface Props {
   }) => void;
   debug: boolean;
   onInteract?: (options: {type: 'action' | 'parameter', actionData: any}) => void;
+  fullValue: any;
 }
 
 export default class ActionBlock extends React.Component<Props> {
@@ -261,7 +262,7 @@ export default class ActionBlock extends React.Component<Props> {
   };
 
   render() {
-    const { value, data, icon, missing, indentation, debug } = this.props;
+    const { value, data, icon, missing, indentation, debug, fullValue } = this.props;
 
     const parameters =
       (data &&
@@ -392,9 +393,8 @@ export default class ActionBlock extends React.Component<Props> {
         >
           <div className={styles.header} 
             onClick={() => {
-              console.log('HI THERE! I GOT CLICKED!!');
               if(!this.props.onInteract) {return;}
-              this.props.onInteract({type: 'action', actionData: this.props.data});
+              this.props.onInteract({type: 'action', actionData: fullValue});
             }}>
             <Icon name={icon} className={styles.icon} />
             <span className={styles.title}>{name || data.Name}</span>
