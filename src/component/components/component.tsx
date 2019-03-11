@@ -131,7 +131,7 @@ export default class dataPreview extends React.Component<Props> {
             data={{
               global: true,
               name: 'Extension Input',
-              icon: 'dataExtension',
+              icon: 'ShortcutExtension',
               aggrandizement: aggrandizement,
             }}
           />
@@ -169,12 +169,19 @@ export default class dataPreview extends React.Component<Props> {
 
             indents[i] = previousIndent + indent;
 
-            return action ? (
+            const blockProps = action
+              ? {
+                data: action.WFAction,
+                icon: action.icon,
+                value: WFAction.WFWorkflowActionParameters,
+              }
+              : {
+                missing: WFAction.WFWorkflowActionIdentifier,
+              };
+
+            return (
               <ActionBlock
                 key={i}
-                data={action.WFAction}
-                icon={action.icon}
-                value={WFAction.WFWorkflowActionParameters}
                 indentation={indents[i]}
                 getVariable={this.getVariable}
                 onVariable={this.addVariable}
@@ -183,19 +190,7 @@ export default class dataPreview extends React.Component<Props> {
                   if(!this.props.onInteract) {return;}
                   this.props.onInteract(data);
                 }}
-              />
-            ) : (
-              <ActionBlock
-                key={i}
-                missing={WFAction.WFWorkflowActionIdentifier}
-                indentation={indents[i]}
-                getVariable={this.getVariable}
-                onVariable={this.addVariable}
-                debug={debug}
-                onInteract={data => {
-                  if(!this.props.onInteract) {return;}
-                  this.props.onInteract(data);
-                }}
+                {...blockProps}
               />
             );
           })}

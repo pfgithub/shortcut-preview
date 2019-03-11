@@ -77,9 +77,7 @@ export default class ActionBlock extends React.Component<Props> {
   }
 
   getParameterInput = (Param: any, value: any) => {
-    if (value === '' && Param.Placeholder) {
-      value = undefined;
-    } else if (value && value.WFSerializationType) {
+    if (value && value.WFSerializationType) {
       switch (value.WFSerializationType) {
         case 'WFTextTokenAttachment':
         case 'WFTextTokenString':
@@ -204,7 +202,7 @@ export default class ActionBlock extends React.Component<Props> {
     }
   };
 
-  parseWFValue = ({ Value, WFSerializationType }: any) => {
+  parseWFValue = ({ Value, WFSerializationType }: any): any => {
     const RC = '\ufffc'; // replacement character
     const { getVariable } = this.props;
 
@@ -245,6 +243,16 @@ export default class ActionBlock extends React.Component<Props> {
         });
       case 'WFTextTokenAttachment':
         return getVariable(Value);
+      case 'WFArrayParameterState':
+        const arrayLength = Value.length;
+        return arrayLength === 1 ? '1 item' : `${arrayLength} items`;
+      case 'WFDictionaryFieldValue':
+        const dictLength = Value.Value.WFDictionaryFieldValueItems.length;
+        return dictLength === 1 ? '1 item' : `${dictLength} items`;
+      case 'WFNumberSubstitutableState':
+        return Value.WFSerializationType
+          ? this.parseWFValue(Value)
+          : `${Boolean(Value)}`;
       default:
         console.error(
           `[ERROR: Parameter] Unknown Value.WFSerializationType "${WFSerializationType}"`,
@@ -302,13 +310,7 @@ export default class ActionBlock extends React.Component<Props> {
               [styles.missing]: true,
             })}
           >
-            <div className={styles.header} 
-              onClick={() => {
-                console.log('HI THERE! I GOT CLICKED!!');
-                if(!this.props.onInteract) {return;}
-                this.props.onInteract({type: 'action', actionData: this.props.data});
-              }}
-            >
+            <div className={styles.header}>
               <Icon name={icon} className={styles.icon} />
               <span className={styles.title}>[{missing}]</span>
             </div>
@@ -388,14 +390,25 @@ export default class ActionBlock extends React.Component<Props> {
             [styles.comment]: data.Name === 'Comment',
           })}
         >
-          <div className={styles.header}>
+          <div className={styles.header} 
+            onClick={() => {
+              console.log('HI THERE! I GOT CLICKED!!');
+              if(!this.props.onInteract) {return;}
+              this.props.onInteract({type: 'action', actionData: this.props.data});
+            }}>
             <Icon name={icon} className={styles.icon} />
             <span className={styles.title}>{name || data.Name}</span>
 
             {debug && (
               <span
                 className={styles.log}
-                onClick={() => console.log(this.state)}
+                onClick={() =>
+                  console.log({
+                    action: name || data.Name,
+                    parameters,
+                    value,
+                  })
+                }
               >
                 LOG
               </span>
@@ -480,7 +493,7 @@ export default class ActionBlock extends React.Component<Props> {
                         : this.parseWFValue(WFItem.WFValue);
                     return (
                       <div className={styles.item} key={i}>
-                        <Field data={{}} value={value} />
+                        <Field data={{ Placeholder: 'Text' }} value={value} />
                       </div>
                     );
                   });
@@ -489,8 +502,14 @@ export default class ActionBlock extends React.Component<Props> {
                     parameters[Param.Key].Value &&
                     parameters[Param.Key].Value.WFDictionaryFieldValueItems.map(
                       (WFItem: any, i: number) => {
-                        const key = this.parseWFValue(WFItem.WFKey);
-                        const value = this.parseWFValue(WFItem.WFValue);
+                        const key =
+                          typeof WFItem.WFKey === 'string'
+                            ? WFItem.WFKey
+                            : this.parseWFValue(WFItem.WFKey);
+                        const value =
+                          typeof WFItem.WFValue === 'string'
+                            ? WFItem.WFValue
+                            : this.parseWFValue(WFItem.WFValue);
                         return (
                           <div
                             className={classList({
@@ -499,8 +518,11 @@ export default class ActionBlock extends React.Component<Props> {
                             })}
                             key={i}
                           >
-                            <Field data={{}} value={key} />
-                            <Field data={{}} value={value} />
+                            <Field data={{ Placeholder: 'Key' }} value={key} />
+                            <Field
+                              data={{ Placeholder: 'Text' }}
+                              value={value}
+                            />
                           </div>
                         );
                       },

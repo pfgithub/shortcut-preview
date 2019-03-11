@@ -5,6 +5,6 @@ import shortcutData from './shortcut-data.json';
 
 export default class App extends React.Component {
   render() {
-    return <ShortcutPreview data={shortcutData} onInteract={(data) => console.log('INTERACT!!', data)} />;
+    return <ShortcutPreview data={shortcutData} debug onInteract={(data) => console.log('INTERACT!!', data)} />;
   }
 }
