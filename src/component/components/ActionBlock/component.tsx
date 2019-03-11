@@ -28,6 +28,7 @@ interface Props {
     icon: string;
   }) => void;
   debug: boolean;
+  onInteract?: (options: {type: 'action' | 'parameter', actionData: any}) => void;
 }
 
 export default class ActionBlock extends React.Component<Props> {
@@ -301,7 +302,13 @@ export default class ActionBlock extends React.Component<Props> {
               [styles.missing]: true,
             })}
           >
-            <div className={styles.header}>
+            <div className={styles.header} 
+              onClick={() => {
+                console.log('HI THERE! I GOT CLICKED!!');
+                if(!this.props.onInteract) {return;}
+                this.props.onInteract({type: 'action', actionData: this.props.data});
+              }}
+            >
               <Icon name={icon} className={styles.icon} />
               <span className={styles.title}>[{missing}]</span>
             </div>

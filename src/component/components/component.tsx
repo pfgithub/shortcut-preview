@@ -14,6 +14,7 @@ const flowModes: number[] = [];
 interface Props {
   data: any;
   debug?: boolean;
+  onInteract?: (options: {type: 'action' | 'parameter', actionData: any}) => void;
 }
 
 export default class dataPreview extends React.Component<Props> {
@@ -178,6 +179,10 @@ export default class dataPreview extends React.Component<Props> {
                 getVariable={this.getVariable}
                 onVariable={this.addVariable}
                 debug={debug}
+                onInteract={data => {
+                  if(!this.props.onInteract) {return;}
+                  this.props.onInteract(data);
+                }}
               />
             ) : (
               <ActionBlock
@@ -187,6 +192,10 @@ export default class dataPreview extends React.Component<Props> {
                 getVariable={this.getVariable}
                 onVariable={this.addVariable}
                 debug={debug}
+                onInteract={data => {
+                  if(!this.props.onInteract) {return;}
+                  this.props.onInteract(data);
+                }}
               />
             );
           })}
