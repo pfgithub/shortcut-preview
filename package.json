@@ -49,8 +49,7 @@
     "dist": "rm -rf dist && tsc -p tsconfig.release.json && NODE_ENV=production babel src/component --out-dir dist --copy-files --extensions .ts,.tsx",
     "prepublishOnly": "npm run dist",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "babel-build": "tsc -p tsconfig.release.json && NODE_ENV=production babel src/component --out-dir dist --copy-files --extensions .ts,.tsx"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
