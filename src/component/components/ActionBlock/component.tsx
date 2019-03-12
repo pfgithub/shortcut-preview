@@ -399,7 +399,18 @@ export default class ActionBlock extends React.Component<Props> {
             }}>
             <Icon name={icon} className={styles.icon} />
             <span className={styles.title}>{name || data.Name}</span>
-
+            
+            {this.props.onInteract && (
+              <span
+                className={styles.log}
+                onClick={() => {
+                  if(!this.props.onInteract) {return;}
+                  this.props.onInteract({type: 'action', actionData: fullValue});
+                }}
+              >
+                                Jump
+              </span>
+            )}
             {debug && (
               <span
                 className={styles.log}
@@ -411,7 +422,7 @@ export default class ActionBlock extends React.Component<Props> {
                   })
                 }
               >
-                LOG
+                            LOG
               </span>
             )}
           </div>

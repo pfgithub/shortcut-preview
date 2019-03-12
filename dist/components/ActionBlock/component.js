@@ -368,7 +368,19 @@ function (_React$Component) {
         className: _stylesModule.default.icon
       }), _react.default.createElement("span", {
         className: _stylesModule.default.title
-      }, name || data.Name), debug && _react.default.createElement("span", {
+      }, name || data.Name), this.props.onInteract && _react.default.createElement("span", {
+        className: _stylesModule.default.log,
+        onClick: function onClick() {
+          if (!_this2.props.onInteract) {
+            return;
+          }
+
+          _this2.props.onInteract({
+            type: 'action',
+            actionData: fullValue
+          });
+        }
+      }, "Jump"), debug && _react.default.createElement("span", {
         className: _stylesModule.default.log,
         onClick: function onClick() {
           return console.log({
