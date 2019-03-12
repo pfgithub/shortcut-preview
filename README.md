@@ -40,6 +40,8 @@ export default class App extends React.Component {
 }
 ```
 
+You can optionally add an `onInteract` property which will add a Jump button to each action and call onInteract with the action data when you press that button.
+
 ### Similar Projects
 
 - [shcuts.app](https://github.com/pNre/shcuts.app)
