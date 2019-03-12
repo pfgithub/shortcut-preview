@@ -352,17 +352,7 @@ function (_React$Component) {
       }, _react.default.createElement("div", {
         className: (0, _utils.classList)((_classList8 = {}, _defineProperty(_classList8, _stylesModule.default.actionBlock, true), _defineProperty(_classList8, _stylesModule.default.comment, data.Name === 'Comment'), _classList8))
       }, _react.default.createElement("div", {
-        className: _stylesModule.default.header,
-        onClick: function onClick() {
-          if (!_this2.props.onInteract) {
-            return;
-          }
-
-          _this2.props.onInteract({
-            type: 'action',
-            actionData: fullValue
-          });
-        }
+        className: _stylesModule.default.header
       }, _react.default.createElement(_ActionIcon.default, {
         name: icon,
         className: _stylesModule.default.icon
