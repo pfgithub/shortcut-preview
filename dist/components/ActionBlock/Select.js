@@ -60,7 +60,6 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Select)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
-      selected: _this.props.value || 'Choose',
       segmented: true
     });
 
@@ -101,9 +100,11 @@ function (_React$Component) {
     value: function render() {
       var _classList, _classList3;
 
-      var _this$state = this.state,
-          selected = _this$state.selected,
-          segmented = _this$state.segmented;
+      var segmented = this.state.segmented;
+      var _this$props = this.props,
+          value = _this$props.value,
+          values = _this$props.values;
+      var selected = values.includes(value) ? value : 'Choose';
       return _react.default.createElement("div", {
         ref: this.node,
         className: (0, _utils.classList)((_classList = {}, _defineProperty(_classList, _stylesModule.default.select, true), _defineProperty(_classList, _stylesModule.default.segmented, segmented), _classList)),

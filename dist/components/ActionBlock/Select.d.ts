@@ -5,7 +5,6 @@ interface Props {
 }
 export default class Select extends React.Component<Props> {
     state: {
-        selected: string;
         segmented: boolean;
     };
     node: React.RefObject<any>;
