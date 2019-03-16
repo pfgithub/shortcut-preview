@@ -160,8 +160,14 @@ function (_React$Component) {
           }));
 
         default:
-          console.error("[ERROR: Parameter] Unknown Class \"".concat(Param.Class, "\""));
-          return null;
+          return _react.default.createElement(_Field.default, {
+            data: {
+              Placeholder: 'error',
+              Multiline: false,
+              TextAlignment: 'Left'
+            },
+            value: "This field cannot be previewed yet (".concat(Param.Class, ")")
+          });
       }
     });
 

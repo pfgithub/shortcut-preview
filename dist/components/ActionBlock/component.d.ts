@@ -20,7 +20,7 @@ interface Props {
 }
 export default class ActionBlock extends React.Component<Props> {
     constructor(props: Props);
-    getParameterInput: (Param: any, value: any) => JSX.Element | null;
+    getParameterInput: (Param: any, value: any) => JSX.Element;
     parseWFValue: ({ Value, WFSerializationType }: any) => any;
     render(): JSX.Element;
 }
