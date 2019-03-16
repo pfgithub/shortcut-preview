@@ -198,8 +198,14 @@ export default class ActionBlock extends React.Component<Props> {
           </svg>
         );
       default:
-        console.error(`[ERROR: Parameter] Unknown Class "${Param.Class}"`);
-        return null;
+        return <Field
+          data={{
+            Placeholder: 'error',
+            Multiline: false,
+            TextAlignment: 'Left',
+          }}
+          value={`This field cannot be previewed yet (${Param.Class})`}
+        />;
     }
   };
 
