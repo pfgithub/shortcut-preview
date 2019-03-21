@@ -27,8 +27,8 @@ interface Props {
     name: string;
     icon: string;
   }) => void;
-  debug: boolean;
   onInteract?: (options: {type: 'action' | 'parameter', actionData: any}) => void;
+  metadata: { debug: boolean; expanded: boolean; safari: boolean };
   fullValue: any;
 }
 
@@ -144,6 +144,9 @@ export default class ActionBlock extends React.Component<Props> {
                 ? this.parseWFValue(value)
                 : value
             }
+            className={classList({
+              [styles.expanded]: this.props.metadata.expanded,
+            })}
           />
         );
       case 'WFVariablePickerParameter':
@@ -198,14 +201,14 @@ export default class ActionBlock extends React.Component<Props> {
           </svg>
         );
       default:
-        return <Field
-          data={{
-            Placeholder: 'error',
-            Multiline: false,
-            TextAlignment: 'Left',
-          }}
-          value={`This field cannot be previewed yet (${Param.Class})`}
-        />;
+        console.error(`[ERROR: Parameter] Unknown Class "${Param.Class}"`);
+        return (
+          <Field
+            data={Param}
+            value="This field hasn't yet been implemented"
+            className={styles.notImplemented}
+          />
+        );
     }
   };
 
@@ -268,7 +271,7 @@ export default class ActionBlock extends React.Component<Props> {
   };
 
   render() {
-    const { value, data, icon, missing, indentation, debug, fullValue } = this.props;
+    const { value, data, icon, missing, indentation, metadata, fullValue } = this.props;
 
     const parameters =
       (data &&
@@ -305,16 +308,15 @@ export default class ActionBlock extends React.Component<Props> {
             [styles.actionBlockWrapper]: true,
             [styles.input]: hasInput,
           })}
-          style={
-            {
-              '--indent': indentation,
-            } as any
-          }
+          style={{
+            '--indent': indentation,
+          }}
         >
           <div
             className={classList({
               [styles.actionBlock]: true,
               [styles.missing]: true,
+              [styles.safari]: metadata.safari,
             })}
           >
             <div className={styles.header}>
@@ -369,6 +371,7 @@ export default class ActionBlock extends React.Component<Props> {
             className={classList({
               [styles.actionBlock]: true,
               [styles.noIcon]: true,
+              [styles.safari]: metadata.safari,
             })}
           >
             <div className={styles.header}>
@@ -395,6 +398,7 @@ export default class ActionBlock extends React.Component<Props> {
           className={classList({
             [styles.actionBlock]: true,
             [styles.comment]: data.Name === 'Comment',
+            [styles.safari]: metadata.safari,
           })}
         >
           <div className={styles.header}>
@@ -412,7 +416,7 @@ export default class ActionBlock extends React.Component<Props> {
                                 Jump
               </span>
             )}
-            {debug && (
+            {metadata.debug && (
               <span
                 className={styles.log}
                 onClick={() =>
@@ -540,6 +544,43 @@ export default class ActionBlock extends React.Component<Props> {
                         );
                       },
                     )
+                  );
+                case 'WFStepperParameter':
+                  const {
+                    StepperDescription,
+                    StepperPrefix,
+                    StepperNoun,
+                    StepperPluralNoun,
+                  } = Param;
+                  const count = parameters[Param.Key];
+                  return (
+                    <div
+                      className={classList({
+                        [styles.item]: true,
+                        [styles.stepper]: true,
+                      })}
+                      key={i}
+                    >
+                      {count && count.WFSerializationType ? (
+                        <React.Fragment>
+                          <label>{StepperDescription}</label>
+                          <Field
+                            data={{ TextAlignment: 'Right' }}
+                            value={this.parseWFValue(count)}
+                          />
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <label>
+                            {StepperPrefix}
+                            {` ${count} ${
+                              count === 1 ? StepperNoun : StepperPluralNoun
+                            }`}
+                          </label>
+                          <Select values={['-', '+']} value="" />
+                        </React.Fragment>
+                      )}
+                    </div>
                   );
                 default:
                   return (
