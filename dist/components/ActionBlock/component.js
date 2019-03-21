@@ -74,7 +74,7 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ActionBlock).call(this, props));
 
     _defineProperty(_assertThisInitialized(_this), "getParameterInput", function (Param, value) {
-      var _classList, _classList2;
+      var _classList, _classList3;
 
       if (value && value.WFSerializationType) {
         switch (value.WFSerializationType) {
@@ -116,7 +116,8 @@ function (_React$Component) {
         case 'WFNumberFieldParameter':
           return _react.default.createElement(_Field.default, {
             data: Param,
-            value: (value || {}).WFSerializationType ? _this.parseWFValue(value) : value
+            value: (value || {}).WFSerializationType ? _this.parseWFValue(value) : value,
+            className: (0, _utils.classList)(_defineProperty({}, _stylesModule.default.expanded, _this.props.metadata.expanded))
           });
 
         case 'WFVariablePickerParameter':
@@ -154,19 +155,17 @@ function (_React$Component) {
         case 'WFExpandingParameter':
           return _react.default.createElement("svg", {
             viewBox: "0 0 448 512",
-            className: (0, _utils.classList)((_classList2 = {}, _defineProperty(_classList2, _stylesModule.default.chevron, true), _defineProperty(_classList2, _stylesModule.default.expanded, value), _classList2))
+            className: (0, _utils.classList)((_classList3 = {}, _defineProperty(_classList3, _stylesModule.default.chevron, true), _defineProperty(_classList3, _stylesModule.default.expanded, value), _classList3))
           }, _react.default.createElement("path", {
             d: " M6.101 359.293L25.9 379.092c4.686 4.686 12.284 4.686 16.971 0L224 198.393l181.13 180.698c4.686 4.686 12.284 4.686 16.971 0l19.799-19.799c4.686-4.686 4.686-12.284 0-16.971L232.485 132.908c-4.686-4.686-12.284-4.686-16.971 0L6.101 342.322c-4.687 4.687-4.687 12.285 0 16.971z"
           }));
 
         default:
+          console.error("[ERROR: Parameter] Unknown Class \"".concat(Param.Class, "\""));
           return _react.default.createElement(_Field.default, {
-            data: {
-              Placeholder: 'error',
-              Multiline: false,
-              TextAlignment: 'Left'
-            },
-            value: "This field cannot be previewed yet (".concat(Param.Class, ")")
+            data: Param,
+            value: "This field hasn't yet been implemented",
+            className: _stylesModule.default.notImplemented
           });
       }
     });
@@ -269,10 +268,10 @@ function (_React$Component) {
   _createClass(ActionBlock, [{
     key: "render",
     value: function render() {
-      var _classList3,
-          _classList4,
-          _classList7,
+      var _classList4,
+          _classList5,
           _classList8,
+          _classList9,
           _this2 = this;
 
       var _this$props2 = this.props,
@@ -281,7 +280,7 @@ function (_React$Component) {
           icon = _this$props2.icon,
           missing = _this$props2.missing,
           indentation = _this$props2.indentation,
-          debug = _this$props2.debug,
+          metadata = _this$props2.metadata,
           fullValue = _this$props2.fullValue;
       var parameters = data && data.Parameters && data.Parameters.reduce(function (result, _ref4) {
         var Key = _ref4.Key,
@@ -293,12 +292,12 @@ function (_React$Component) {
       var hasInput = data && data.Input || // TODO: check over the parameters directly
       JSON.stringify(parameters).includes("\"OutputUUID\":\"".concat(previousOutputUUID, "\""));
       if (missing) return _react.default.createElement("div", {
-        className: (0, _utils.classList)((_classList3 = {}, _defineProperty(_classList3, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList3, _stylesModule.default.input, hasInput), _classList3)),
+        className: (0, _utils.classList)((_classList4 = {}, _defineProperty(_classList4, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList4, _stylesModule.default.input, hasInput), _classList4)),
         style: {
           '--indent': indentation
         }
       }, _react.default.createElement("div", {
-        className: (0, _utils.classList)((_classList4 = {}, _defineProperty(_classList4, _stylesModule.default.actionBlock, true), _defineProperty(_classList4, _stylesModule.default.missing, true), _classList4))
+        className: (0, _utils.classList)((_classList5 = {}, _defineProperty(_classList5, _stylesModule.default.actionBlock, true), _defineProperty(_classList5, _stylesModule.default.missing, true), _defineProperty(_classList5, _stylesModule.default.safari, metadata.safari), _classList5))
       }, _react.default.createElement("div", {
         className: _stylesModule.default.header
       }, _react.default.createElement(_ActionIcon.default, {
@@ -316,7 +315,7 @@ function (_React$Component) {
       }))));
 
       if (value.GroupingIdentifier && value.WFControlFlowMode) {
-        var _classList5, _classList6;
+        var _classList6, _classList7;
 
         var _name;
 
@@ -337,12 +336,12 @@ function (_React$Component) {
         }
 
         return _react.default.createElement("div", {
-          className: (0, _utils.classList)((_classList5 = {}, _defineProperty(_classList5, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList5, _stylesModule.default.input, hasInput), _classList5)),
+          className: (0, _utils.classList)((_classList6 = {}, _defineProperty(_classList6, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList6, _stylesModule.default.input, hasInput), _classList6)),
           style: {
             '--indent': indentation
           }
         }, _react.default.createElement("div", {
-          className: (0, _utils.classList)((_classList6 = {}, _defineProperty(_classList6, _stylesModule.default.actionBlock, true), _defineProperty(_classList6, _stylesModule.default.noIcon, true), _classList6))
+          className: (0, _utils.classList)((_classList7 = {}, _defineProperty(_classList7, _stylesModule.default.actionBlock, true), _defineProperty(_classList7, _stylesModule.default.noIcon, true), _defineProperty(_classList7, _stylesModule.default.safari, metadata.safari), _classList7))
         }, _react.default.createElement("div", {
           className: _stylesModule.default.header
         }, _react.default.createElement("span", {
@@ -351,12 +350,12 @@ function (_React$Component) {
       }
 
       return _react.default.createElement("div", {
-        className: (0, _utils.classList)((_classList7 = {}, _defineProperty(_classList7, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList7, _stylesModule.default.input, hasInput), _classList7)),
+        className: (0, _utils.classList)((_classList8 = {}, _defineProperty(_classList8, _stylesModule.default.actionBlockWrapper, true), _defineProperty(_classList8, _stylesModule.default.input, hasInput), _classList8)),
         style: {
           '--indent': indentation
         }
       }, _react.default.createElement("div", {
-        className: (0, _utils.classList)((_classList8 = {}, _defineProperty(_classList8, _stylesModule.default.actionBlock, true), _defineProperty(_classList8, _stylesModule.default.comment, data.Name === 'Comment'), _classList8))
+        className: (0, _utils.classList)((_classList9 = {}, _defineProperty(_classList9, _stylesModule.default.actionBlock, true), _defineProperty(_classList9, _stylesModule.default.comment, data.Name === 'Comment'), _defineProperty(_classList9, _stylesModule.default.safari, metadata.safari), _classList9))
       }, _react.default.createElement("div", {
         className: _stylesModule.default.header
       }, _react.default.createElement(_ActionIcon.default, {
@@ -376,7 +375,7 @@ function (_React$Component) {
             actionData: fullValue
           });
         }
-      }, "Jump"), debug && _react.default.createElement("span", {
+      }, "Jump"), metadata.debug && _react.default.createElement("span", {
         className: _stylesModule.default.log,
         onClick: function onClick() {
           return console.log({
@@ -386,6 +385,8 @@ function (_React$Component) {
           });
         }
       }, "LOG")), data.Parameters && data.Parameters.map(function (Param, i) {
+        var _classList11;
+
         if (Param.Hidden) return null;
         if (Param.RequiredResources && Param.RequiredResources.map(function (_ref5) {
           var WFResourceClass = _ref5.WFResourceClass,
@@ -467,12 +468,12 @@ function (_React$Component) {
 
           case 'WFDictionaryParameter':
             return parameters[Param.Key].Value && parameters[Param.Key].Value.WFDictionaryFieldValueItems.map(function (WFItem, i) {
-              var _classList9;
+              var _classList10;
 
               var key = typeof WFItem.WFKey === 'string' ? WFItem.WFKey : _this2.parseWFValue(WFItem.WFKey);
               var value = typeof WFItem.WFValue === 'string' ? WFItem.WFValue : _this2.parseWFValue(WFItem.WFValue);
               return _react.default.createElement("div", {
-                className: (0, _utils.classList)((_classList9 = {}, _defineProperty(_classList9, _stylesModule.default.item, true), _defineProperty(_classList9, _stylesModule.default.dictionary, true), _classList9)),
+                className: (0, _utils.classList)((_classList10 = {}, _defineProperty(_classList10, _stylesModule.default.item, true), _defineProperty(_classList10, _stylesModule.default.dictionary, true), _classList10)),
                 key: i
               }, _react.default.createElement(_Field.default, {
                 data: {
@@ -486,6 +487,25 @@ function (_React$Component) {
                 value: value
               }));
             });
+
+          case 'WFStepperParameter':
+            var StepperDescription = Param.StepperDescription,
+                StepperPrefix = Param.StepperPrefix,
+                StepperNoun = Param.StepperNoun,
+                StepperPluralNoun = Param.StepperPluralNoun;
+            var count = parameters[Param.Key];
+            return _react.default.createElement("div", {
+              className: (0, _utils.classList)((_classList11 = {}, _defineProperty(_classList11, _stylesModule.default.item, true), _defineProperty(_classList11, _stylesModule.default.stepper, true), _classList11)),
+              key: i
+            }, count && count.WFSerializationType ? _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("label", null, StepperDescription), _react.default.createElement(_Field.default, {
+              data: {
+                TextAlignment: 'Right'
+              },
+              value: _this2.parseWFValue(count)
+            })) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("label", null, StepperPrefix, " ".concat(count, " ").concat(count === 1 ? StepperNoun : StepperPluralNoun)), _react.default.createElement(_Select.default, {
+              values: ['-', '+'],
+              value: ""
+            })));
 
           default:
             return _react.default.createElement("div", {

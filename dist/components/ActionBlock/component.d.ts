@@ -11,11 +11,15 @@ interface Props {
         name: string;
         icon: string;
     }) => void;
-    debug: boolean;
     onInteract?: (options: {
         type: 'action' | 'parameter';
         actionData: any;
     }) => void;
+    metadata: {
+        debug: boolean;
+        expanded: boolean;
+        safari: boolean;
+    };
     fullValue: any;
 }
 export default class ActionBlock extends React.Component<Props> {

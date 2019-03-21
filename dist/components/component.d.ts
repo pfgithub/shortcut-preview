@@ -7,10 +7,12 @@ interface Props {
         type: 'action' | 'parameter';
         actionData: any;
     }) => void;
+    expanded?: boolean;
 }
 export default class dataPreview extends React.Component<Props> {
     state: {
         magicVariables: {};
+        safari: boolean;
     };
     addVariable: ({ uuid, name, icon, }: {
         uuid: string;

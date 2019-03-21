@@ -73,6 +73,12 @@ $retina: (
     box-shadow: inset 0.5px 0 #cccbcb, inset 0 0.5px #cccbcb,
       inset -0.5px 0 #cccbcb, inset 0 -0.5px #cccbcb,
       0 zoomed(4px) zoomed(20px) rgba(0, 0, 0, 0.05);
+
+    // Safari
+    &.safari {
+      border: 0.5px solid #cccbcb;
+      box-shadow: 0 zoomed(4px) zoomed(20px) rgba(0, 0, 0, 0.05);
+    }
   }
 
   .header {
@@ -121,7 +127,14 @@ $retina: (
 
   &.comment {
     background: #f8f6e8;
-    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 zoomed(4px) zoomed(20px) rgba(0, 0, 0, 0.05);
+
+    @media #{$retina} {
+      // Safari
+      &.safari {
+        border: none;
+      }
+    }
 
     .header {
       @include thinBorder(#e8d3a5);
@@ -206,10 +219,17 @@ $retina: (
   }
 
   &.multiline {
-    // height: zoomed(100px);
-    min-height: zoomed(100px);
-    overflow-y: scroll;
+    height: zoomed(116px);
+    overflow-y: auto;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
+    padding: zoomed(8px) zoomed(16px);
+    margin: zoomed(-8px) zoomed(-16px);
+
+    &.expanded {
+      min-height: zoomed(116px);
+      height: auto;
+    }
   }
 
   &.variable {
@@ -218,6 +238,11 @@ $retina: (
     background: #f5f6fb;
     border-radius: zoomed(12px);
     padding: 0 zoomed(12px);
+  }
+
+  &.notImplemented {
+    color: #ec3e3e;
+    font-style: italic;
   }
 
   .getFileInitialPath {
@@ -290,6 +315,11 @@ $retina: (
       &.selected {
         color: var(--white-color);
         background: var(--ios-blue-color);
+      }
+
+      .stepper & {
+        font-size: zoomed(27px);
+        font-weight: 200;
       }
     }
   }

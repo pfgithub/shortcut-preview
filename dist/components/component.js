@@ -64,7 +64,8 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(dataPreview)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
-      magicVariables: {}
+      magicVariables: {},
+      safari: navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
     });
 
     _defineProperty(_assertThisInitialized(_this), "addVariable", function (_ref) {
@@ -187,7 +188,10 @@ function (_React$Component) {
       var _this$props = this.props,
           data = _this$props.data,
           _this$props$debug = _this$props.debug,
-          debug = _this$props$debug === void 0 ? false : _this$props$debug;
+          debug = _this$props$debug === void 0 ? false : _this$props$debug,
+          _this$props$expanded = _this$props.expanded,
+          expanded = _this$props$expanded === void 0 ? false : _this$props$expanded;
+      var safari = this.state.safari;
       return _react.default.createElement("div", {
         className: _stylesModule.default.container
       }, data && data[0].WFWorkflowActions.map(function (WFAction, i) {
@@ -215,15 +219,19 @@ function (_React$Component) {
           indentation: indents[i],
           getVariable: _this2.getVariable,
           onVariable: _this2.addVariable,
-          debug: debug,
-          fullValue: WFAction,
+          metadata: {
+            debug: debug,
+            expanded: expanded,
+            safari: safari
+          },
           onInteract: function onInteract(data) {
             if (!_this2.props.onInteract) {
               return;
             }
 
             _this2.props.onInteract(data);
-          }
+          },
+          fullValue: WFAction
         }, blockProps));
       }));
     }
