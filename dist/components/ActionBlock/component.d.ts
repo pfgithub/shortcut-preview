@@ -1,16 +1,11 @@
 import React from 'react';
+import { Attachment } from '../../interfaces/Attachment';
 interface Props {
     data?: any;
     value?: any;
     icon?: string;
     missing?: string;
     indentation: number;
-    getVariable: (attachment: any) => JSX.Element | null;
-    onVariable: ({ uuid, name, icon, }: {
-        uuid: string;
-        name: string;
-        icon: string;
-    }) => void;
     onInteract?: (options: {
         type: 'action' | 'parameter';
         actionData: any;
@@ -24,6 +19,7 @@ interface Props {
 }
 export default class ActionBlock extends React.Component<Props> {
     constructor(props: Props);
+    getVariable: (attachment: Attachment) => JSX.Element | null;
     getParameterInput: (Param: any, value: any) => JSX.Element;
     parseWFValue: ({ Value, WFSerializationType }: any) => any;
     render(): JSX.Element;

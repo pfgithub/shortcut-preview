@@ -15,6 +15,8 @@ var _Select = _interopRequireDefault(require("./Select"));
 
 var _AppField = _interopRequireDefault(require("./AppField"));
 
+var _Token = _interopRequireDefault(require("./Token"));
+
 var _utils = require("../utils");
 
 var _stylesModule = _interopRequireDefault(require("./styles.module.scss"));
@@ -59,7 +61,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var variableIndex = 0;
 var previousOutputUUID = '';
+var magicVariables = {};
 
 var ActionBlock =
 /*#__PURE__*/
@@ -71,7 +75,102 @@ function (_React$Component) {
 
     _classCallCheck(this, ActionBlock);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ActionBlock).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ActionBlock).call(this, props)); // TODO: handle Filter Files (and all the ".filter" actions) parameters
+    // if (data.Name === 'Filter Files') console.log(value);
+
+    _defineProperty(_assertThisInitialized(_this), "getVariable", function (attachment) {
+      var aggrandizement = attachment.Aggrandizements && attachment.Aggrandizements.map(function (aggr) {
+        switch (aggr.Type) {
+          case 'WFDictionaryValueVariableAggrandizement':
+            return aggr.DictionaryKey;
+
+          case 'WFPropertyVariableAggrandizement':
+            return aggr.PropertyName;
+
+          default:
+            return;
+        }
+      }).filter(Boolean)[0];
+
+      switch (attachment.Type) {
+        case 'ActionOutput':
+          var variable = magicVariables[attachment.OutputUUID];
+          return variable ? _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              name: variable.name,
+              icon: variable.icon,
+              aggrandizement: aggrandizement
+            }
+          }) : null;
+
+        case 'Variable':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              name: attachment.VariableName,
+              aggrandizement: aggrandizement
+            }
+          });
+
+        case 'Clipboard':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              global: true,
+              name: 'Clipboard',
+              icon: 'Clipboard',
+              aggrandizement: aggrandizement
+            }
+          });
+
+        case 'CurrentDate':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              global: true,
+              name: 'Current Date',
+              icon: 'Date',
+              aggrandizement: aggrandizement
+            }
+          });
+
+        case 'Ask':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              global: true,
+              name: 'Ask When Run',
+              aggrandizement: aggrandizement
+            }
+          });
+
+        case 'Input':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              global: true,
+              name: 'Input',
+              aggrandizement: aggrandizement
+            }
+          });
+
+        case 'ExtensionInput':
+          return _react.default.createElement(_Token.default, {
+            key: "variable-".concat(variableIndex++),
+            data: {
+              global: true,
+              name: 'Extension Input',
+              icon: 'ShortcutExtension',
+              aggrandizement: aggrandizement
+            }
+          });
+
+        default:
+          console.error("[ERROR: Variable] Unknown Type \"".concat(attachment.Type, "\""));
+          return null;
+      }
+    });
 
     _defineProperty(_assertThisInitialized(_this), "getParameterInput", function (Param, value) {
       var _classList, _classList3;
@@ -175,8 +274,6 @@ function (_React$Component) {
           WFSerializationType = _ref.WFSerializationType;
       var RC = "\uFFFC"; // replacement character
 
-      var getVariable = _this.props.getVariable;
-
       switch (WFSerializationType) {
         case 'WFTextTokenString':
           var text = Value.string;
@@ -197,7 +294,7 @@ function (_React$Component) {
               case 'ExtensionInput':
               case 'Input':
               case 'Variable':
-                tokens[index] = getVariable(attachment);
+                tokens[index] = _this.getVariable(attachment);
                 break;
 
               default:
@@ -211,7 +308,7 @@ function (_React$Component) {
           });
 
         case 'WFTextTokenAttachment':
-          return getVariable(Value);
+          return _this.getVariable(Value);
 
         case 'WFArrayParameterState':
           var arrayLength = Value.length;
@@ -229,39 +326,6 @@ function (_React$Component) {
       }
     });
 
-    var _this$props = _this.props,
-        _this$props$data = _this$props.data,
-        data = _this$props$data === void 0 ? {} : _this$props$data,
-        _this$props$value = _this$props.value,
-        _value = _this$props$value === void 0 ? {} : _this$props$value,
-        _this$props$icon = _this$props.icon,
-        icon = _this$props$icon === void 0 ? 'Placeholder' : _this$props$icon,
-        onVariable = _this$props.onVariable;
-
-    var UUID = _value.UUID,
-        CustomOutputName = _value.CustomOutputName;
-
-    if (UUID) {
-      var OutputName = data.Output && data.Output.OutputName; // Missing OutputNames
-
-      if (data.Name === 'If') OutputName = 'If Result';
-      if (data.Name === 'Choose from Menu') OutputName = 'Menu Result';
-      if (data.Name === 'Filter Files') OutputName = 'Files';
-      if (data.Name === 'Get Details of Images') OutputName = 'Details of Images';
-      if (data.Name === 'Find Music') OutputName = 'Music';
-      if (data.Name === 'Find Reminders') OutputName = 'Reminders';
-      if (data.Name === 'Find Photos') OutputName = 'Photos';
-      if (data.Name === 'Find Contacts') OutputName = 'Contacts';
-      onVariable({
-        uuid: UUID,
-        name: CustomOutputName || OutputName || console.error("[ERROR: OutputName] Unknown OutputName for \"".concat(data.Name, "\" action")) || 'UNKNOWN',
-        icon: icon
-      });
-      previousOutputUUID = UUID;
-    } // TODO: handle Filter Files (and all the ".filter" actions) parameters
-    // if (data.Name === 'Filter Files') console.log(value);
-
-
     return _this;
   }
 
@@ -274,14 +338,35 @@ function (_React$Component) {
           _classList9,
           _this2 = this;
 
-      var _this$props2 = this.props,
-          value = _this$props2.value,
-          data = _this$props2.data,
-          icon = _this$props2.icon,
-          missing = _this$props2.missing,
-          indentation = _this$props2.indentation,
-          metadata = _this$props2.metadata,
-          fullValue = _this$props2.fullValue;
+      var _this$props = this.props,
+          value = _this$props.value,
+          data = _this$props.data,
+          icon = _this$props.icon,
+          missing = _this$props.missing,
+          indentation = _this$props.indentation,
+          metadata = _this$props.metadata,
+          fullValue = _this$props.fullValue;
+      var UUID = value.UUID,
+          CustomOutputName = value.CustomOutputName;
+
+      if (UUID) {
+        var OutputName = data.Output && data.Output.OutputName; // Missing OutputNames
+
+        if (data.Name === 'If') OutputName = 'If Result';
+        if (data.Name === 'Choose from Menu') OutputName = 'Menu Result';
+        if (data.Name === 'Filter Files') OutputName = 'Files';
+        if (data.Name === 'Get Details of Images') OutputName = 'Details of Images';
+        if (data.Name === 'Find Music') OutputName = 'Music';
+        if (data.Name === 'Find Reminders') OutputName = 'Reminders';
+        if (data.Name === 'Find Photos') OutputName = 'Photos';
+        if (data.Name === 'Find Contacts') OutputName = 'Contacts';
+        magicVariables[UUID] = {
+          name: CustomOutputName || OutputName || console.error("[ERROR: OutputName] Unknown OutputName for \"".concat(data.Name, "\" action")) || 'UNKNOWN',
+          icon: icon || 'Placeholder'
+        };
+        previousOutputUUID = UUID;
+      }
+
       var parameters = data && data.Parameters && data.Parameters.reduce(function (result, _ref4) {
         var Key = _ref4.Key,
             DefaultValue = _ref4.DefaultValue;
